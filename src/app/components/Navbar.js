@@ -1,16 +1,15 @@
-"use client";
-import React from "react";
-import Link from "next/link";
-import { useState } from "react";
-import Menu from "./menu";
+'use client'
+import React from 'react'
+import Link from 'next/link'
+import { useState } from 'react'
+import Menu from './menu'
 
 export const Navbar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-  
+    setIsDropdownOpen(!isDropdownOpen)
+  }
   return (
     <>
       {/* Navbar */}
@@ -58,14 +57,14 @@ export const Navbar = () => {
 
       {/* Dropdown menu */}
       <div
-        className={`nav-links md:hidden w-25 absolute top-9 right-1 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 dark:shadow-dark ${
-          isDropdownOpen ? "block" : "hidden"
+        className={`nav-links md:hidden absolute top-9 right-1 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 dark:shadow-dark ${
+          isDropdownOpen ? 'block' : 'hidden'
         } `}
         id="dropdown-menu"
-        style={{ zIndex: 50 }}
+        style={{ zIndex: 50, width: '13rem' }}
       >
-        <Menu />
+        <Menu icon={true} setIsDropdownOpen={setIsDropdownOpen} />
       </div>
     </>
-  );
-};
+  )
+}
