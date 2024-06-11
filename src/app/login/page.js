@@ -1,8 +1,8 @@
-"use client"
+"use client";
 // Importing required modules
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
+import axios from "axios";
 import Link from "next/link";
 import {
   FaFacebookF,
@@ -11,10 +11,44 @@ import {
   FaRegEnvelope,
 } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { handleChange } from "../redux/slice";
 
 // Home component
 export default function Login() {
   const router = useRouter();
+
+  const dispatch = useDispatch();
+
+  const { email, password, remember } = useSelector((state) => state.login);
+
+  const handleInputChange = (event) => {
+    const { name, value, checked, type } = event.target;
+    dispatch(handleChange({ name, value, checked, type }));
+  };
+
+  const handleSignIn = async () => {
+    console.log("==========", email, password, remember);
+
+    try {
+      let formData = {
+        email,
+        password,
+        // remember
+      };
+      console.log(formData);
+      let response = await axios.post(
+        "http://localhost:8080/api/v1/login",
+        formData
+      );
+      console.log(response.data.message);
+      alert(response.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     // Main section
@@ -76,6 +110,8 @@ export default function Login() {
                   name="email"
                   placeholder="Email"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={email}
+                  onChange={handleInputChange}
                 />
               </div>
               {/* Password input */}
@@ -86,12 +122,20 @@ export default function Login() {
                   name="password"
                   placeholder="Password"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={password}
+                  onChange={handleInputChange}
                 />
               </div>
               {/* Remember me and forgot password */}
               <div className="flex justify-between w-64 mb-5">
                 <label className="flex items-center text-xs">
-                  <input type="checkbox" name="remember" className="mr-1" />
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    className="mr-1"
+                    checked={remember}
+                    onChange={handleInputChange}
+                  />
                   Remember Me
                 </label>
                 <a href="#" className="text-xs">
@@ -100,7 +144,10 @@ export default function Login() {
               </div>
             </div>
             {/* Signin button */}
-            <button className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer">
+            <button
+              className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer"
+              onClick={handleSignIn}
+            >
               Sign In
             </button>
           </div>

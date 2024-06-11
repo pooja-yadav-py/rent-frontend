@@ -11,9 +11,11 @@ import {
 } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 import bgImage from '../../../public/images/back.jpg';
-
+import { useState } from "react";
 export default function Home() {
   const router = useRouter();
+  const [value, setValue] = useState({username:"", email:"", password:""})
+
   return (
     <main className="relative flex flex-col items-center justify-center w-full p-24 text-center bg-center bg-no-repeat">
       <Image
