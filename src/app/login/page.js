@@ -1,54 +1,40 @@
-"use client";
+'use client'
 // Importing required modules
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import axios from "axios";
-import Link from "next/link";
+import React from 'react'
+
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import axios from 'axios'
+import Link from 'next/link'
 import {
   FaFacebookF,
   FaLinkedinIn,
   FaGoogle,
   FaRegEnvelope,
-} from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { handleChange } from "../redux/slice";
+} from 'react-icons/fa'
+import { MdLockOutline } from 'react-icons/md'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { handleChange, loginUserData } from '../redux/loginSlice'
 
-// Home component
+// Login component
 export default function Login() {
-  const router = useRouter();
-
-  const dispatch = useDispatch();
-
-  const { email, password, remember } = useSelector((state) => state.login);
+  const router = useRouter()
+  const { email, password, remember, loading, error, success } = useSelector(
+    (state) => state.login,
+  )
+  const dispatch = useDispatch()
 
   const handleInputChange = (event) => {
-    const { name, value, checked, type } = event.target;
-    dispatch(handleChange({ name, value, checked, type }));
-  };
+    const { name, value, checked, type } = event.target
+    dispatch(handleChange({ name, value, checked, type }))
+  }
 
-  const handleSignIn = async () => {
-    console.log("==========", email, password, remember);
-
-    try {
-      let formData = {
-        email,
-        password,
-        // remember
-      };
-      console.log(formData);
-      let response = await axios.post(
-        "http://localhost:8080/api/v1/login",
-        formData
-      );
-      console.log(response.data.message);
-      alert(response.data.message);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleSignIn = (e) => {
+    e.preventDefault()
+    dispatch(loginUserData({ email, password, remember }))
+  }
+  console.log(error)
 
   return (
     // Main section
@@ -146,10 +132,13 @@ export default function Login() {
             {/* Signin button */}
             <button
               className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer"
+              disabled={loading}
               onClick={handleSignIn}
             >
-              Sign In
+              {loading ? 'Signing In..' : 'Sign In'}
             </button>
+            {error && <p className="text-red-500">{error}</p>}
+            {success && <p className="text-green-700">Login successful!</p>}
           </div>
         </div>
 
@@ -170,5 +159,5 @@ export default function Login() {
         </div>
       </div>
     </main>
-  );
+  )
 }
