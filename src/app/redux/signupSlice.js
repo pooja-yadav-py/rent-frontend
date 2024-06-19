@@ -13,10 +13,16 @@ const initialState = {
 export const signupUser = createAsyncThunk(
   'signup/signupUser',
   async ({ fullName, email, password }, { rejectWithValue }) => {
+
+    // Frontend validation
+    if (!fullName || !email || !password) {
+      return rejectWithValue('All fields are required');
+    }
+
     try {
       const response = await axios.post(
         'http://localhost:8080/api/v1/register',
-        { fullName, email, password },
+        { fullName, email, password }
       )
       console.log(response.data.data)
       if (response.data.message === 'success') {

@@ -30,9 +30,18 @@ export default function Login() {
     dispatch(handleChange({ name, value, checked, type }))
   }
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault()
-    dispatch(loginUserData({ email, password, remember }))
+    try {
+      const resultAction = await dispatch(loginUserData({ email, password, remember }));
+      const responseData = resultAction.payload;
+      
+      console.log('Login successful:', responseData);
+      router.push('/');
+    } catch (error) {
+      console.error('Login failed:', error.message);
+      // Handle error (display error message, etc.)
+    }
   }
   console.log(error)
 

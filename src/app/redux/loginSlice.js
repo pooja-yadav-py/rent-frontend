@@ -17,6 +17,12 @@ const initialState = {
 export const loginUserData = createAsyncThunk(
   "loginUserData",
   async ({ email, password, remember }, { rejectWithValue }) => {
+
+    // Frontend validation
+    if (!email || !password) {
+      return rejectWithValue('Email and password are required');
+    }
+
     try {
       const formData = { email, password, remember };
       let response = await axios.post(
@@ -25,7 +31,7 @@ export const loginUserData = createAsyncThunk(
       );
       console.log(response);
       if (response.data.message === "success") {
-        return response.data.message;
+        return response.data;
       } else {
         return rejectWithValue("Login failed");
       }

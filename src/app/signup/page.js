@@ -12,26 +12,38 @@ import {
 import { MdLockOutline } from 'react-icons/md'
 import bgImage from '../../../public/images/back.jpg'
 import { useState } from 'react'
+// import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux'
 import { updateField, signupUser } from '../redux/signupSlice'
 import axios from 'axios'
 
 export default function Home() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const router = useRouter();
   const { fullName, email, password, loading, error, success } = useSelector(
     (state) => state.signup,
   )
-
+  console.log(success)
   const handleSignUpChange = (event) => {
     const { name, value } = event.target
     console.log(name, value)
     dispatch(updateField({ field: name, value }))
+    
   }
 
   const handleSignUpForm = async (e) => {
     e.preventDefault()
-    dispatch(signupUser({ fullName, email, password }))
+    try {
+      const resultAction = await dispatch(signupUser({ fullName, email, password }));
+      const responseData = resultAction.payload;
+
+      console.log('Signup successful:', responseData);
+      router.push('/login')    
+    } catch (error) {
+      console.error('Signup failed:', error.message);
+    } 
   }
+
   return (
     <main className="relative flex flex-col items-center justify-center w-full p-24 text-center bg-center bg-no-repeat">
       <Image
