@@ -34,10 +34,14 @@ export default function Login() {
     e.preventDefault()
     try {
       const resultAction = await dispatch(loginUserData({ email, password, remember }));
-      const responseData = resultAction.payload;
+      const {error,payload} = resultAction;
+      if (error) {
+        console.error('Login failed:', error);
+      } else {
+        console.log('Login successful',payload);
+        router.push('/');
+      }
       
-      console.log('Login successful:', responseData);
-      router.push('/');
     } catch (error) {
       console.error('Login failed:', error.message);
       // Handle error (display error message, etc.)
@@ -55,6 +59,7 @@ export default function Login() {
         objectFit="cover"
         className="absolute inset-0 z-0"
       />
+      
       <div className="bg-white rounded-2xl shadow-2xl flex w-full max-w-4xl relative z-10">
         {/* Signin section */}
         <div className="w-3/5 p-5">

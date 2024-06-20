@@ -35,10 +35,13 @@ export default function Home() {
     e.preventDefault()
     try {
       const resultAction = await dispatch(signupUser({ fullName, email, password }));
-      const responseData = resultAction.payload;
-
-      console.log('Signup successful:', responseData);
-      router.push('/login')    
+      const {error,payload} = resultAction;
+      if (error) {
+        console.error('Signup failed:', error);
+      } else {
+        console.log('Signup successful',payload);
+        router.push('/login');
+      }
     } catch (error) {
       console.error('Signup failed:', error.message);
     } 

@@ -26,7 +26,7 @@ export const signupUser = createAsyncThunk(
       )
       console.log(response.data.data)
       if (response.data.message === 'success') {
-        return response.data.data
+        return response.data
       } else {
         return rejectWithValue('Signup failed')
       }
