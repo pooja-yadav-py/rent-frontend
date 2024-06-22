@@ -1,19 +1,52 @@
-"use client";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
+'use client'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
 import {
   FaFacebookF,
   FaLinkedinIn,
   FaGoogle,
   FaRegEnvelope,
   FaUserCircle,
-} from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
-import bgImage from '../../../public/images/back.jpg';
+} from 'react-icons/fa'
+import { MdLockOutline } from 'react-icons/md'
+import bgImage from '../../../public/images/back.jpg'
+import { useState } from 'react'
+// import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux'
+import { updateField, signupUser } from '../redux/signupSlice'
+import axios from 'axios'
 
 export default function Home() {
+  const dispatch = useDispatch();
   const router = useRouter();
+  const { fullName, email, password, loading, error, success } = useSelector(
+    (state) => state.signup,
+  )
+  console.log(success)
+  const handleSignUpChange = (event) => {
+    const { name, value } = event.target
+    console.log(name, value)
+    dispatch(updateField({ field: name, value }))
+    
+  }
+
+  const handleSignUpForm = async (e) => {
+    e.preventDefault()
+    try {
+      const resultAction = await dispatch(signupUser({ fullName, email, password }));
+      const {error,payload} = resultAction;
+      if (error) {
+        console.error('Signup failed:', error);
+      } else {
+        console.log('Signup successful',payload);
+        router.push('/login');
+      }
+    } catch (error) {
+      console.error('Signup failed:', error.message);
+    } 
+  }
+
   return (
     <main className="relative flex flex-col items-center justify-center w-full p-24 text-center bg-center bg-no-repeat">
       <Image
@@ -24,7 +57,7 @@ export default function Home() {
         className="absolute inset-0 z-0"
       />
       <div className="bg-white rounded-2xl shadow-2xl flex w-full max-w-4xl relative z-10">
-        {/* signin section */} 
+        {/* signin section */}
         <div className=" relative w-3/5 bg-green-500 text-white rounded-tl-2xl rounded-bl-2xl py-36 px-12 ">
           <div className="text-left font-bold absolute top-5 left-5">
             <span className="text-black ">Rent</span>Items
@@ -82,6 +115,8 @@ export default function Home() {
                   name="fullName"
                   placeholder="FullName"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={fullName}
+                  onChange={handleSignUpChange}
                 />
               </div>
               <div className="bg-gray-100 w-64 p-2 flex items-center mb-3">
@@ -91,6 +126,8 @@ export default function Home() {
                   name="email"
                   placeholder="Email"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={email}
+                  onChange={handleSignUpChange}
                 />
               </div>
               <div className="bg-gray-100 w-64 p-2 flex items-center mb-3">
@@ -100,15 +137,23 @@ export default function Home() {
                   name="password"
                   placeholder="Password"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={password}
+                  onChange={handleSignUpChange}
                 />
               </div>
             </div>
-            <button className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer">
-              Sign Up
+            <button
+              className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer"
+              disabled={loading}
+              onClick={handleSignUpForm}
+            >
+              {loading ? 'Signing Up...' : 'Sign Up'}
             </button>
+            {error && <p className="text-red-500">{error}</p>}
+            {success && <p className="text-green-700">Signup successful!</p>}
           </div>
         </div>
       </div>
     </main>
-  );
+  )
 }

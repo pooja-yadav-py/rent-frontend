@@ -1,20 +1,53 @@
-"use client"
+'use client'
 // Importing required modules
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import React from 'react'
 
-import Link from "next/link";
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import axios from 'axios'
+import Link from 'next/link'
 import {
   FaFacebookF,
   FaLinkedinIn,
   FaGoogle,
   FaRegEnvelope,
-} from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
+} from 'react-icons/fa'
+import { MdLockOutline } from 'react-icons/md'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { handleChange, loginUserData } from '../redux/loginSlice'
 
-// Home component
+// Login component
 export default function Login() {
-  const router = useRouter();
+  const router = useRouter()
+  const { email, password, remember, loading, error, success } = useSelector(
+    (state) => state.login,
+  )
+  const dispatch = useDispatch()
+
+  const handleInputChange = (event) => {
+    const { name, value, checked, type } = event.target
+    dispatch(handleChange({ name, value, checked, type }))
+  }
+
+  const handleSignIn = async (e) => {
+    e.preventDefault()
+    try {
+      const resultAction = await dispatch(loginUserData({ email, password, remember }));
+      const {error,payload} = resultAction;
+      if (error) {
+        console.error('Login failed:', error);
+      } else {
+        console.log('Login successful',payload);
+        router.push('/');
+      }
+      
+    } catch (error) {
+      console.error('Login failed:', error.message);
+      // Handle error (display error message, etc.)
+    }
+  }
+  console.log(error)
 
   return (
     // Main section
@@ -26,6 +59,7 @@ export default function Login() {
         objectFit="cover"
         className="absolute inset-0 z-0"
       />
+      
       <div className="bg-white rounded-2xl shadow-2xl flex w-full max-w-4xl relative z-10">
         {/* Signin section */}
         <div className="w-3/5 p-5">
@@ -76,6 +110,8 @@ export default function Login() {
                   name="email"
                   placeholder="Email"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={email}
+                  onChange={handleInputChange}
                 />
               </div>
               {/* Password input */}
@@ -86,12 +122,20 @@ export default function Login() {
                   name="password"
                   placeholder="Password"
                   className="bg-gray-100 outline-none text-sm flex-1"
+                  value={password}
+                  onChange={handleInputChange}
                 />
               </div>
               {/* Remember me and forgot password */}
               <div className="flex justify-between w-64 mb-5">
                 <label className="flex items-center text-xs">
-                  <input type="checkbox" name="remember" className="mr-1" />
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    className="mr-1"
+                    checked={remember}
+                    onChange={handleInputChange}
+                  />
                   Remember Me
                 </label>
                 <a href="#" className="text-xs">
@@ -100,9 +144,15 @@ export default function Login() {
               </div>
             </div>
             {/* Signin button */}
-            <button className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer">
-              Sign In
+            <button
+              className="border-2 border-green-500  text-green-500 rounded-full mx-auto px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white hover:cursor-pointer"
+              disabled={loading}
+              onClick={handleSignIn}
+            >
+              {loading ? 'Signing In..' : 'Sign In'}
             </button>
+            {error && <p className="text-red-500">{error}</p>}
+            {success && <p className="text-green-700">Login successful!</p>}
           </div>
         </div>
 
@@ -123,5 +173,5 @@ export default function Login() {
         </div>
       </div>
     </main>
-  );
+  )
 }

@@ -1,0 +1,25 @@
+/* Styles for mobile menu button */
+.mobile-menu-button svg {
+  fill: none;
+  stroke: #000;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px;
+}
+
+/* Styles for navigation links */
+.nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+}
+
+/* Styles for responsive behavior */
+@media (max-width: 768px) {
+    .Hamburger_menu {
+      display: none;
+    }
+  
+    .nav-links {
+      display: block;
+    }
+  }
