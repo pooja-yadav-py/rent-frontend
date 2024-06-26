@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { API_BASE_URL } from "../config/constants";
 // Define the initial state
 const initialState = {
   email: "",
@@ -26,7 +26,7 @@ export const loginUserData = createAsyncThunk(
     try {
       const formData = { email, password, remember };
       let response = await axios.post(
-        "http://localhost:8080/api/v1/login",
+        `${API_BASE_URL}login`,
         formData
       );
       console.log(response);
