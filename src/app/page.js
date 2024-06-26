@@ -8,13 +8,6 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      {
-        process.env.NODE_ENV=="development"? 
-        <h2> you are on development mode </h2>
-        :
-        <h2>you production</h2>
-      }
-      
       <div className="custom-shape-divider-top-1718795163">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
           <path
