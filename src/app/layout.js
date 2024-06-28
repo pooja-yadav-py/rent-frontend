@@ -1,7 +1,9 @@
+
 import './globals.css'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Providers } from './redux/providers'
+
 
 export const metadata = {
   title: 'Rent app',
@@ -12,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-        {/* Main content */}
+        {/* Main content */}       
         <Providers>{children}</Providers>
       </body>
     </html>

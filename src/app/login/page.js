@@ -1,6 +1,7 @@
 'use client'
 // Importing required modules
 import React from 'react'
+import toast , { Toaster } from 'react-hot-toast';
 
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -36,6 +37,7 @@ export default function Login() {
       const resultAction = await dispatch(loginUserData({ email, password, remember }));
       const {error,payload} = resultAction;
       if (error) {
+        toast.error(payload)
         console.error('Login failed:', error);
       } else {
         console.log('Login successful',payload);
@@ -47,7 +49,6 @@ export default function Login() {
       // Handle error (display error message, etc.)
     }
   }
-  console.log(error)
 
   return (
     // Main section
@@ -59,7 +60,8 @@ export default function Login() {
         objectFit="cover"
         className="absolute inset-0 z-0"
       />
-      
+      <Toaster position="top-center" reverseOrder={false} />
+
       <div className="bg-white rounded-2xl shadow-2xl flex w-full max-w-4xl relative z-10">
         {/* Signin section */}
         <div className="w-3/5 p-5">
@@ -151,8 +153,6 @@ export default function Login() {
             >
               {loading ? 'Signing In..' : 'Sign In'}
             </button>
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-green-700">Login successful!</p>}
           </div>
         </div>
 

@@ -1,54 +1,62 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
+"use client";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
+
 import {
   FaFacebookF,
   FaLinkedinIn,
   FaGoogle,
   FaRegEnvelope,
   FaUserCircle,
-} from 'react-icons/fa'
-import { MdLockOutline } from 'react-icons/md'
-import bgImage from '../../../public/images/back.jpg'
-import { useState } from 'react'
+} from "react-icons/fa";
+import { MdLockOutline } from "react-icons/md";
+import bgImage from "../../../public/images/back.jpg";
+import { useState } from "react";
 // import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux'
-import { updateField, signupUser } from '../redux/signupSlice'
-import axios from 'axios'
+import { useDispatch, useSelector } from "react-redux";
+import { updateField, signupUser } from "../redux/signupSlice";
+import axios from "axios";
 
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { fullName, email, password, loading, error, success } = useSelector(
-    (state) => state.signup,
-  )
-  console.log(success)
+    (state) => state.signup
+  );
+  console.log(email);
+  console.log(success);
   const handleSignUpChange = (event) => {
-    const { name, value } = event.target
-    console.log(name, value)
-    dispatch(updateField({ field: name, value }))
-    
-  }
+    const { name, value } = event.target;
+    console.log(name, value);
+    dispatch(updateField({ field: name, value }));
+  };
 
   const handleSignUpForm = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const resultAction = await dispatch(signupUser({ fullName, email, password }));
-      const {error,payload} = resultAction;
+      const resultAction = await dispatch(
+        signupUser({ fullName, email, password })
+      );
+      console.log(resultAction);
+      const { error, payload } = resultAction;
       if (error) {
-        console.error('Signup failed:', error);
+        toast.error(payload ? payload : "Signup failed");
+        console.error("Signup failed:", error);
       } else {
-        console.log('Signup successful',payload);
-        router.push('/login');
+        toast.success(payload.message);
+        console.log("Signup successful", payload);
+        router.push("/login");
       }
     } catch (error) {
-      console.error('Signup failed:', error.message);
-    } 
-  }
-
+      toast.error("Signup failed");
+      console.error("Signup failed::", error.message);
+    }
+  };
   return (
     <main className="relative flex flex-col items-center justify-center w-full p-24 text-center bg-center bg-no-repeat">
+      <Toaster position="top-center" reverseOrder={false} />
       <Image
         src="/images/back3.jpg"
         alt="Background"
@@ -147,13 +155,11 @@ export default function Home() {
               disabled={loading}
               onClick={handleSignUpForm}
             >
-              {loading ? 'Signing Up...' : 'Sign Up'}
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-green-700">Signup successful!</p>}
           </div>
         </div>
       </div>
     </main>
-  )
+  );
 }

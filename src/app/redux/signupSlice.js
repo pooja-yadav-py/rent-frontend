@@ -24,16 +24,16 @@ export const signupUser = createAsyncThunk(
       const response = await axios.post(
         `${API_BASE_URL}register`,
         { fullName, email, password }
-      )
-      console.log(response.data.data)
-      if (response.data.message === 'success') {
+      );
+      console.log("===",response)
+      if (response.status === 201) {
         return response.data
       } else {
-        return rejectWithValue('Signup failed')
+        return rejectWithValue(response.data.errorMessage || 'Signup failed')
       }
     } catch (error) {
-      console.log(error.response.data.errorMessage)
-      return rejectWithValue(error.response.data.errorMessage)
+      console.log("=======",error.response.data.message)
+      return rejectWithValue(error.response.data.message)
     }
   },
 )
@@ -58,13 +58,14 @@ const signupSlice = createSlice({
         state.success = false
       })
       .addCase(signupUser.fulfilled, (state) => {
-        state.loading = false
+        state.loading = true
         state.success = true
         if (state.success) {
           state.error = null
           state.fullName = ''
           state.email = ''
           state.password = ''
+          state.loading = false
         }
       })
       .addCase(signupUser.rejected, (state, action) => {

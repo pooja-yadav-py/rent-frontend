@@ -33,7 +33,8 @@ export const loginUserData = createAsyncThunk(
       if (response.data.message === "success") {
         return response.data;
       } else {
-        return rejectWithValue("Login failed");
+        console.log(response)
+        return rejectWithValue(response.data.message);
       }
     } catch (error) {
       console.log(error);
@@ -64,13 +65,13 @@ const Slice = createSlice({
         state.success = false;
       })
       .addCase(loginUserData.fulfilled, (state) => {
-        state.loading = false;
+        state.loading = true;
         state.success = true;
-        if (state.success) {
+        /* if (state.success) {
           state.error = null;
           state.email = "";
-          state.password = "";
-        }
+          state.password = "";  
+        } */
       })
       .addCase(loginUserData.rejected, (state, action) => {
         state.loading = false;
