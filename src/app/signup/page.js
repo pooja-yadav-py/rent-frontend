@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,15 @@ import axios from "axios";
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    const isLoggedin = localStorage.getItem("isLoggedIn");
+    console.log("isloggedin", isLoggedin);
+    if (localStorage.getItem("isLoggedIn")) {
+      router.push("/");
+    }
+  }, []);
+
   const { fullName, email, password, loading, error, success } = useSelector(
     (state) => state.signup
   );
