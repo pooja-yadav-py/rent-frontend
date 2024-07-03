@@ -1,10 +1,10 @@
 'use client'
 // Importing required modules
-
-import { Navbar } from './components/Navbar'
+import { Navbar } from './components/Navbar';
 
 // Home component
 export default function Home() {
+
   return (
     <>
       <Navbar />

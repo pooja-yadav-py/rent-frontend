@@ -6,7 +6,6 @@ import Menu from './menu'
 
 export const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }

@@ -14,7 +14,7 @@ const initialState = {
 export const signupUser = createAsyncThunk(
   'signup/signupUser',
   async ({ fullName, email, password }, { rejectWithValue }) => {
-
+        
     // Frontend validation
     if (!fullName || !email || !password) {
       return rejectWithValue('All fields are required');
