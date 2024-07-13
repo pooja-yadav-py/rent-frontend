@@ -17,5 +17,5 @@ export const LISTITEMS = [
     {link:'#', text : 'Contact', icon : MdContacts},
     {link:'/login', text : 'Login', icon : IoLogInSharp},
     {link:'/signup', text : 'Signup', icon : SiGnuprivacyguard},
-    {link:'#', text : 'LogOut', icon : IoLogInSharp},
+    // {link:'#', text : 'LogOut', icon : IoLogInSharp},
   ]

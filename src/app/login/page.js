@@ -1,62 +1,62 @@
-"use client";
+'use client'
 // Importing required modules
-import React, { useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
+import React, { useEffect } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
 import {
   FaFacebookF,
   FaLinkedinIn,
   FaGoogle,
   FaRegEnvelope,
-} from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { handleChange, loginUserData } from "../redux/loginSlice";
+} from 'react-icons/fa'
+import { MdLockOutline } from 'react-icons/md'
+import { useDispatch, useSelector } from 'react-redux'
+import { handleChange, loginUserData } from '../redux/loginSlice'
 
 // Login component
 export default function Login() {
-  const router = useRouter();
+  const router = useRouter()
   const { email, password, remember, loading, success } = useSelector(
-    (state) => state.login
-  );
-  const dispatch = useDispatch();
+    (state) => state.login,
+  )
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const isLoggedin = localStorage.getItem("isLoggedIn");
-    console.log("isloggedin", isLoggedin);
-    if (localStorage.getItem("isLoggedIn")) {
-      router.push("/");
+    const isLoggedin = localStorage.getItem('isLoggedIn')
+    console.log('isloggedin', isLoggedin)
+    if (localStorage.getItem('isLoggedIn')) {
+      router.push('/home')
     }
-  }, []);
+  }, [])
 
   const handleInputChange = (event) => {
-    const { name, value, checked, type } = event.target;
-    dispatch(handleChange({ name, value, checked, type }));
-  };
+    const { name, value, checked, type } = event.target
+    dispatch(handleChange({ name, value, checked, type }))
+  }
 
   const handleSignIn = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const resultAction = await dispatch(
-        loginUserData({ email, password, remember })
-      );
-      const { error, payload } = resultAction;
+        loginUserData({ email, password, remember }),
+      )
+      const { error, payload } = resultAction
       if (error) {
-        toast.error(payload);
-        console.error("Login failed:", error);
+        toast.error(payload)
+        console.error('Login failed:', error)
       } else {
-        console.log("Login successful", payload);
-        localStorage.setItem("token", payload.data);
-        localStorage.setItem("isLoggedIn", true);
-        router.push("/");
+        console.log('Login successful', payload)
+        localStorage.setItem('token', payload.data)
+        localStorage.setItem('isLoggedIn', true)
+        router.push('/home')
       }
     } catch (error) {
-      console.error("Login failed:", error.message);
+      console.error('Login failed:', error.message)
       // Handle error (display error message, etc.)
     }
-  };
+  }
 
   return (
     // Main section
@@ -159,7 +159,7 @@ export default function Login() {
               disabled={loading}
               onClick={handleSignIn}
             >
-              {loading ? "Signing In.." : "Sign In"}
+              {loading ? 'Signing In..' : 'Sign In'}
             </button>
           </div>
         </div>
@@ -181,5 +181,5 @@ export default function Login() {
         </div>
       </div>
     </main>
-  );
+  )
 }
