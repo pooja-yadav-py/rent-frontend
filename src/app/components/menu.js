@@ -3,8 +3,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LISTITEMS } from "../config/constants";
 import { SiGnuprivacyguard } from "react-icons/io5";
-import { IoHomeSharp } from 'react-icons/io5'
-
+import { IoHomeSharp } from "react-icons/io5";
 
 import { useSelector } from "react-redux";
 
@@ -29,11 +28,12 @@ const Menu = ({ setIsDropdownOpen, icon }) => {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshAccessToken");
     router.push("/login");
 
     console.log("logout");
   };
-console.log("icon",icon)
+  console.log("icon", icon);
   return (
     <div>
       <ul className="font-medium flex flex-col p-3 md:p-0  border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
@@ -56,11 +56,11 @@ console.log("icon",icon)
         {isloggedin && (
           <li key="logout">
             <button onClick={handleLogout}>
-              {icon && 
+              {icon && (
                 <span className="inline-block mr-2 border border-gray-400 rounded-md p-1">
-                  <IoHomeSharp className="inline-block text-xl"/> 
+                  <IoHomeSharp className="inline-block text-xl" />
                 </span>
-              }
+              )}
               LogOut
             </button>
           </li>

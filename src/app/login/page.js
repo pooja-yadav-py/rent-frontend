@@ -1,62 +1,110 @@
-'use client'
+"use client";
 // Importing required modules
-import React, { useEffect } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
+import React, { useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 import {
   FaFacebookF,
   FaLinkedinIn,
   FaGoogle,
   FaRegEnvelope,
-} from 'react-icons/fa'
-import { MdLockOutline } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
-import { handleChange, loginUserData } from '../redux/loginSlice'
+} from "react-icons/fa";
+import { MdLockOutline } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { handleChange, loginUserData } from "../redux/loginSlice";
+import axios from "axios";
+import { API_BASE_URL } from "../config/constants";
 
 // Login component
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
   const { email, password, remember, loading, success } = useSelector(
-    (state) => state.login,
-  )
-  const dispatch = useDispatch()
+    (state) => state.login
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const isLoggedin = localStorage.getItem('isLoggedIn')
-    console.log('isloggedin', isLoggedin)
-    if (localStorage.getItem('isLoggedIn')) {
-      router.push('/home')
+    const isLoggedin = localStorage.getItem("isLoggedIn");
+    console.log("isloggedin", isLoggedin);
+    if (localStorage.getItem("isLoggedIn")) {
+      router.push("/home");
     }
-  }, [])
+  }, []);
 
   const handleInputChange = (event) => {
-    const { name, value, checked, type } = event.target
-    dispatch(handleChange({ name, value, checked, type }))
-  }
+    const { name, value, checked, type } = event.target;
+    dispatch(handleChange({ name, value, checked, type }));
+  };
 
-  const handleSignIn = async (e) => {
-    e.preventDefault()
+  const saveAccessToken = (token) => {
+    localStorage.setItem("token", token);
+  };
+
+  const saveRefreshToken = (token) => {
+    localStorage.setItem("refreshAccessToken", token);
+  };
+
+  const refreshAuthToken = async (refreshAccesstoken) => {
+    const config = {
+      headers: {
+        authorization: `Bearer ${refreshAccesstoken}`,
+        email: email,
+      },
+    };
     try {
-      const resultAction = await dispatch(
-        loginUserData({ email, password, remember }),
-      )
-      const { error, payload } = resultAction
-      if (error) {
-        toast.error(payload)
-        console.error('Login failed:', error)
+      console.log("refreshAccessToken========", refreshAccesstoken);
+      let response = await axios.post(`${API_BASE_URL}refresh-token`, config);
+
+      if (response.status === 200) {
+        const { accessToken, refreshToken } = response.data;
+        // Save new tokens
+        saveAccessToken(accessToken);
+        saveRefreshToken(refreshToken);
+        console.log("Tokens refreshed successfully");
+
+        // Call refreshToken recursively with the new refresh token
+        setTimeout(() => {
+          refreshAuthToken(refreshToken);
+        }, 1 * 60 * 1000);
       } else {
-        console.log('Login successful', payload)
-        localStorage.setItem('token', payload.data)
-        localStorage.setItem('isLoggedIn', true)
-        router.push('/home')
+        console.error("Error refreshing tokens:", response.data.message);
       }
     } catch (error) {
-      console.error('Login failed:', error.message)
-      // Handle error (display error message, etc.)
+      console.error(
+        "Error refreshing access token:",
+        error.response ? error.response.data : error.message
+      );
     }
-  }
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const resultAction = await dispatch(
+        loginUserData({ email, password, remember })
+      );
+      const { error, payload } = resultAction;
+      console.log(error, payload);
+
+      if (error) {
+        toast.error(payload);
+        console.error("Login failed:", error);
+      } else {
+        console.log("Login successful", payload);
+        saveAccessToken(payload.data.accessToken);
+        saveRefreshToken(payload.data.refreshToken);
+        localStorage.setItem("isLoggedIn", true);
+        router.push("/home");
+        setTimeout(() => {
+          refreshAuthToken(payload.data.refreshToken);
+        }, 1 * 60 * 1000);
+      }
+    } catch (error) {
+      console.error("Login failed:", error.message);
+    }
+  };
 
   return (
     // Main section
@@ -159,7 +207,7 @@ export default function Login() {
               disabled={loading}
               onClick={handleSignIn}
             >
-              {loading ? 'Signing In..' : 'Sign In'}
+              {loading ? "Signing In.." : "Sign In"}
             </button>
           </div>
         </div>
@@ -181,5 +229,5 @@ export default function Login() {
         </div>
       </div>
     </main>
-  )
+  );
 }
