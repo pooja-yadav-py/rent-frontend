@@ -67,7 +67,7 @@ export default function Login() {
         // Call refreshToken recursively with the new refresh token
         setTimeout(() => {
           refreshAuthToken(refreshToken);
-        }, 1 * 60 * 1000);
+        }, 14 * 60 * 1000);
       } else {
         console.error("Error refreshing tokens:", response.data.message);
       }
@@ -99,7 +99,7 @@ export default function Login() {
         router.push("/home");
         setTimeout(() => {
           refreshAuthToken(payload.data.refreshToken);
-        }, 1 * 60 * 1000);
+        }, 14 * 60 * 1000);
       }
     } catch (error) {
       console.error("Login failed:", error.message);
